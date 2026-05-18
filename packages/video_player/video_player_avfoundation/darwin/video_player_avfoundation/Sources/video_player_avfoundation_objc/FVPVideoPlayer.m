@@ -255,8 +255,10 @@ NS_INLINE CGFloat radiansToDegrees(CGFloat radians) {
   videoComposition.renderSize = CGSizeMake(width, height);
 
   videoComposition.sourceTrackIDForFrameTiming = videoTrack.trackID;
-  if (CMTIME_IS_VALID(videoTrack.minFrameDuration)) {
-    videoComposition.frameDuration = videoTrack.minFrameDuration;
+  CMTime frameDuration = videoTrack.minFrameDuration;
+  if (CMTIME_IS_VALID(frameDuration) && frameDuration.timescale > 0 &&
+      frameDuration.value > 0) {
+    videoComposition.frameDuration = frameDuration;
   } else {
     NSLog(@"Warning: videoTrack.minFrameDuration for input video is invalid, please report this to "
           @"https://github.com/flutter/flutter/issues with input video attached.");
